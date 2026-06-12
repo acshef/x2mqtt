@@ -321,7 +321,7 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
             **port_kwargs,
         )
 
-        username_kwargs = {"default": os.getenv(EnvVar.MQTT_USERNAME)}
+        username_kwargs = {"default": cls.getenv(EnvVar.MQTT_USERNAME)}
         if not str(username_kwargs["default"] or "").strip():
             username_kwargs["required"] = True
         parser.add_argument(
@@ -331,7 +331,7 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
             **username_kwargs,
         )
 
-        password_kwargs = {"default": os.getenv(EnvVar.MQTT_PASSWORD)}
+        password_kwargs = {"default": cls.getenv(EnvVar.MQTT_PASSWORD)}
         if not str(password_kwargs["default"] or "").strip():
             password_kwargs["required"] = True
         parser.add_argument(
