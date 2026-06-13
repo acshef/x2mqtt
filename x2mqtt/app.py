@@ -75,7 +75,9 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
 
         self.setup_api()
 
-        self.publish_discovery(entities)
+        if self.ha_prefix:
+            self.publish_discovery(entities)
+        self.publish_initial_availability()
         self.publish_states(entities)
 
         every(self.interval, self.publish_states, entities)
@@ -159,9 +161,8 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
             retain=True,
         )
 
+    def publish_initial_availability(self):
         self.log.info(f"Publishing availability for {self.name}")
-
-        # Publish availability
         self._publish_availability(True)
 
     def _publish_availability(self, online: bool):
@@ -275,11 +276,14 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
             help=f"Device name. Defaults to the value of the {cls.envname(EnvVar.NAME)} environment variable or `platform.node()` if that's not set",
         )
 
+        ha_prefix = os.getenv(EnvVar.HA_PREFIX)
+        if ha_prefix is None:
+            ha_prefix = DEFAULT_HA_PREFIX
         parser.add_argument(
             "--ha-prefix",
-            default=os.getenv(EnvVar.HA_PREFIX) or DEFAULT_HA_PREFIX,
+            default=ha_prefix.strip(),
             metavar="PREFIX",
-            help=f"MQTT topic prefix for Home Assistant use. Defaults to the value of the {cls.envname(EnvVar.HA_PREFIX)} environment variable or {DEFAULT_HA_PREFIX!r} if that's not set",
+            help=f"MQTT topic prefix for Home Assistant use. Defaults to the value of the {cls.envname(EnvVar.HA_PREFIX)} environment variable or {DEFAULT_HA_PREFIX!r} if that's not set. Use a blank value to disable Home Assistant discovery",
         )
 
         interval_kwargs = {}
