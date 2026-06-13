@@ -109,7 +109,7 @@ class Entity[T](abc.ABC):
     ) -> "MQTTMessageInfo":
         if retain is None:
             retain = self.retain
-        return self.client.publish(topic, payload, self.qos, self.retain, properties)
+        return self.client.publish(topic, payload, self.qos, retain, properties)
 
     def publish_state(self, data: T | Exception):
         state = self.get_state(data)
