@@ -82,9 +82,6 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
 
         every(self.interval, self.publish_states, entities)
 
-    def get_id(self) -> str:
-        return platform.node()
-
     def set_topic_prefix(self) -> str:
         app_name = slugify(self.app_name.strip(" /")).strip(" /")
         name = slugify(self.name.strip(" /")).strip(" /")
@@ -128,9 +125,10 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
 
     @functools.cached_property
     def client_id(self) -> str:
+        host = slugify(platform.node(), "-").strip("-")
         app_name = slugify(self.app_name, "-").strip("-")
         name = slugify(self.name, "-").strip("-")
-        return f"{app_name}-{name}"
+        return f"{host}-{app_name}-{name}"
 
     @functools.cached_property
     def availability_topic(self) -> str:
