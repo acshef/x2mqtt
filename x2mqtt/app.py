@@ -270,9 +270,9 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
     def setup_app_args(cls, parser: argparse.ArgumentParser):
         parser.add_argument(
             "--name",
-            default=platform.node(),
             metavar="NAME",
-            help="Device name. Defaults to the value of platform.node()",
+            default=(cls.getenv(EnvVar.NAME) or "").strip() or platform.node(),
+            help=f"Device name. Defaults to the value of the {cls.envname(EnvVar.NAME)} environment variable or `platform.node()` if that's not set",
         )
 
         parser.add_argument(

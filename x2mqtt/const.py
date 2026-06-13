@@ -2,6 +2,7 @@ import enum
 
 
 class EnvVar(enum.StrEnum):
+    NAME = "NAME"
     MQTT_HOST = "MQTT_HOST"
     MQTT_PASSWORD = "MQTT_PASSWORD"
     MQTT_PORT = "MQTT_PORT"
