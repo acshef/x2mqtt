@@ -138,19 +138,22 @@ class App[T](argparse.Namespace, metaclass=abc.ABCMeta):
     def log(self) -> logging.Logger:
         return logging.getLogger(self.app_name)
 
-    def publish_discovery(self, entities: list["Entity[T]"]):
-        self.log.info(
-            f"Publishing discovery for {len(entities)} entit{'y' if len(entities) == 1 else 'ies'}"
-        )
-
+    def get_discovery_payload(self, entities: list["Entity[T]"]) -> dict:
         # Publish device discovery: https://www.home-assistant.io/integrations/mqtt/#device-discovery-payload
-        payload = {
+        return {
             "availability_topic": self.availability_topic,
             "device": self.device._asdict(),
             "origin": self.origin._asdict(),
             "components": {entity.id: entity.get_discovery_payload() for entity in entities},
             "qos": self.mqtt_qos,
         }
+
+    def publish_discovery(self, entities: list["Entity[T]"]):
+        self.log.info(
+            f"Publishing discovery for {len(entities)} entit{'y' if len(entities) == 1 else 'ies'}"
+        )
+
+        payload = self.get_discovery_payload(entities)
 
         self.client.publish(
             f"{self.ha_prefix}/device/{self.topic_prefix}/config",
