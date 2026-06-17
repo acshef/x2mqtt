@@ -4,6 +4,5 @@ from .entity import Entity
 __all__ = ["Sensor"]
 
 
-class Sensor[T](Entity[T]):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, domain=Domain.SENSOR, **kwargs)
+class Sensor[T, A: dict = dict](Entity[T, A]):
+    domain = Domain.SENSOR

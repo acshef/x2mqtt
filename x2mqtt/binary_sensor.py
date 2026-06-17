@@ -6,12 +6,11 @@ from .entity import Entity
 __all__ = ["BinarySensor"]
 
 
-class BinarySensor[T](Entity[T], metaclass=abc.ABCMeta):
+class BinarySensor[T, A: dict = dict](Entity[T, A], metaclass=abc.ABCMeta):
+    domain = Domain.BINARY_SENSOR
+
     _payload_on = Payload.ON
     _payload_off = Payload.OFF
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, domain=Domain.BINARY_SENSOR, **kwargs)
 
     def get_discovery_payload(self):
         data = super().get_discovery_payload()
