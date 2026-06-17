@@ -6,4 +6,4 @@ from .entity import *
 from .origin import *
 from .sensor import *
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"

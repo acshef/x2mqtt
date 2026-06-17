@@ -35,9 +35,6 @@ class Entity[T, A: dict = dict](abc.ABC):
     enabled_by_default: bool = True
     include_data_error_attribute: bool = False
 
-    state_topic = "~/state"
-    attrs_topic = "~/attributes"
-
     def __init__(
         self,
         *,
@@ -61,10 +58,18 @@ class Entity[T, A: dict = dict](abc.ABC):
         self.log = log
 
     @functools.cached_property
+    def state_topic(self) -> str:
+        return f"{self.base_topic}/state"
+
+    @functools.cached_property
+    def attrs_topic(self) -> str:
+        return f"{self.base_topic}/attributes"
+
+    @functools.cached_property
     def id(self) -> str:
         return slugify(self.name)
 
-    @functools.cached_property
+    @property
     def base_topic(self) -> str:
         return f"{self.topic_prefix}/{self.id}"
 
@@ -81,7 +86,6 @@ class Entity[T, A: dict = dict](abc.ABC):
 
     def get_discovery_payload(self):
         data = {
-            "~": self.base_topic,
             "device_class": self.device_class,
             "enabled_by_default": self.enabled_by_default,
             "json_attributes_topic": self.attrs_topic,
