@@ -75,7 +75,7 @@ class Entity[T, A: dict = dict](abc.ABC):
 
     @functools.cached_property
     def unique_id(self) -> str:
-        id_hash = hashlib.md5(self.id.encode("utf-8"))
+        id_hash = hashlib.md5(self.base_topic.encode("utf-8"))
         return uuid.UUID(bytes=id_hash.digest()).hex
 
     @abc.abstractmethod
@@ -88,17 +88,15 @@ class Entity[T, A: dict = dict](abc.ABC):
         data = {
             "device_class": self.device_class,
             "enabled_by_default": self.enabled_by_default,
+            "icon": self.icon,
             "json_attributes_topic": self.attrs_topic,
             "name": self.name,
             "platform": self.domain,
             "state_class": self.state_class,
             "state_topic": self.state_topic,
             "unique_id": self.unique_id,
+            "unit_of_measurement": self.unit_of_measurement,
         }
-        if self.unit_of_measurement:
-            data["unit_of_measurement"] = self.unit_of_measurement
-        if self.icon:
-            data["icon"] = self.icon
 
         return data
 
