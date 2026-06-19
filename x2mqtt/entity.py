@@ -85,7 +85,6 @@ class Entity[T, A: dict = dict](abc.ABC):
         data = {
             "device_class": self.device_class,
             "enabled_by_default": self.enabled_by_default,
-            "icon": self.icon,
             "json_attributes_topic": self.attrs_topic,
             "name": self.name,
             "platform": self.domain,
