@@ -1,7 +1,7 @@
 [project]
 name = "x2mqtt"
 description = "A generic platform to poll data from an API and publish it to MQTT. Uses Home Assistant discovery."
-version = "0.3.2"
+version = "0.3.3"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = ["paho-mqtt>=2.1.0", "python-slugify~=8.0"]

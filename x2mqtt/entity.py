@@ -1,10 +1,8 @@
 import abc
 import functools
-import hashlib
 import json
 import logging
 import typing as t
-import uuid
 
 from .const import *
 from .util import slugify
@@ -73,10 +71,9 @@ class Entity[T, A: dict = dict](abc.ABC):
     def base_topic(self) -> str:
         return f"{self.topic_prefix}/{self.id}"
 
-    @functools.cached_property
+    @property
     def unique_id(self) -> str:
-        id_hash = hashlib.md5(self.base_topic.encode("utf-8"))
-        return uuid.UUID(bytes=id_hash.digest()).hex
+        return slugify(self.base_topic)
 
     @abc.abstractmethod
     def get_state(self, data: T | Exception) -> str: ...
@@ -97,6 +94,10 @@ class Entity[T, A: dict = dict](abc.ABC):
             "unique_id": self.unique_id,
             "unit_of_measurement": self.unit_of_measurement,
         }
+
+        # Must be added conditionally due to schema validation not allowing `null` icons
+        if self.icon:
+            data["icon"] = self.icon
 
         return data
 
